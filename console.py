@@ -129,7 +129,7 @@ class HBNBCommand(cmd.Cmd):
         # class exist and parameters present
         parameter = {}
         for param in params:
-            #unpack to key, val after splitting
+            # unpack to key, val after splitting
             key, val = tuple(param.split("="))
             # checking for string syntax
             if val[0] == '"':
@@ -144,11 +144,11 @@ class HBNBCommand(cmd.Cmd):
                 except (SyntaxError, NameError, ValueError):
                     continue
             parameter[key] = val
-        # create a new instance
-        obj_cls = eval(args[0])
-        obj = obj_cls(**parameter)
-        # add object to storage
-        storage.new(obj)
+        if parameter == {}:
+            obj = eval(args[0])()
+        else:
+            obj = eval(args[0])(**parameter)
+            storage.new(obj)
         print(obj.id)
         obj.save()
 
@@ -345,6 +345,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
