@@ -10,7 +10,7 @@ class FileStorage:
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage
-        or a list of objects of one type of class
+        or a dictionary of objects of one type of class
         """
         if cls is not None:
             # evaluate incase user added strings
