@@ -23,8 +23,8 @@ def do_deploy(archive_path):
         return False
 
     # generating the remote file name and path
-    base_name = os.path.basename(archive_path)
-    archive_file_name = os.path.splitext(base_name)[0]
+    base_name = os.path.basename(archive_path)  # with .tgz
+    archive_file_name = os.path.splitext(base_name)[0]  # without .tgz
     remote_dir = '/tmp/' + base_name
 
     # upload archive to /tmp/ directory
