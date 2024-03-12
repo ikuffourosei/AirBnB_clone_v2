@@ -4,7 +4,7 @@
 
 
 import os
-from fabric.api import env, put, sudo
+from fabric.api import env, put, run
 from sys import argv
 
 
@@ -33,24 +33,24 @@ def do_deploy(archive_path):
 
     # uncompress the archive
     new_dir = '/data/web_static/releases/{}/'.format(file_name)
-    if sudo("rm -rf {}".format(new_dir)).failed is True:
+    if run("rm -rf {}".format(new_dir)).failed is True:
         return False
-    if sudo("mkdir -p {}".format(new_dir)).failed is True:
+    if run("mkdir -p {}".format(new_dir)).failed is True:
         return False
-    if sudo("tar -xzf {} -C {}".format(remote_dir, new_dir)).failed is True:
+    if run("tar -xzf {} -C {}".format(remote_dir, new_dir)).failed is True:
         return False
 
     # deleting archive from web server
-    if sudo("rm {}".format(remote_dir)).failed is True:
+    if run("rm {}".format(remote_dir)).failed is True:
         return False
-    if sudo("mv {}web_static/* {}".format(new_dir, new_dir)).failed is True:
+    if run("mv {}web_static/* {}".format(new_dir, new_dir)).failed is True:
         return False
-    if sudo("rm -rf {}web_static".format(new_dir)).failed is True:
+    if run("rm -rf {}web_static".format(new_dir)).failed is True:
         return False
-    if sudo("rm -rf /data/web_static/current").failed is True:
+    if run("rm -rf /data/web_static/current").failed is True:
         return False
 
     # creating a new symbolic link
-    if sudo("ln -s {} /data/web_static/current".format(new_dir)).failed is True:
+    if run("ln -s {} /data/web_static/current".format(new_dir)).failed is True:
         return False
     return True
