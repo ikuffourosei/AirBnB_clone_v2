@@ -27,7 +27,8 @@ def c_text(text):
     """Displays c followed by value of text
     Replace '_' with a space
     """
-    text = text.replace("_", " ")
+    if "_" in text:
+        text = text.replace("_", " ")
     return f"c {escape(text)}"
 
 
