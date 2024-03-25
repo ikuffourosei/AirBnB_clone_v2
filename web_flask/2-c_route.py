@@ -4,6 +4,7 @@
 
 
 from flask import Flask
+from markupsafe import escape
 
 app = Flask(__name__)
 
@@ -27,7 +28,7 @@ def c_text(text):
     Replace '_' with a space
     """
     text = text.replace("_", " ")
-    return f"c {text}"
+    return f"c {escape(text)}"
 
 
 if __name__ == "__main__":
