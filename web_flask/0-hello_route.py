@@ -12,7 +12,7 @@ app = Flask(__name__)
 def say_hello():
     """a function that returns HBNB
     """
-    return "Hello HBNB"
+    return "Hello HBNB!"
 
 
 if __name__ == "__main__":
