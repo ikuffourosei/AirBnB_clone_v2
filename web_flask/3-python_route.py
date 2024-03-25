@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-"""a script that starts a Flask web application
+"""A script tnat starts a Flask Application
 """
-
 
 from flask import Flask
 from markupsafe import escape
@@ -30,6 +29,16 @@ def c_text(text):
     if "_" in text:
         text = text.replace("_", " ")
     return f"C {escape(text)}"
+
+
+@app.route('/python/<text>', strict_slashes=False)
+def python(text='cool'):
+    """display “Python ” followed by the value of the text
+    replace underscore _ symbols with a space
+    """
+    if "_" in text:
+        text = text.replace("_", " ")
+    return f"Python {escape(text)}"
 
 
 if __name__ == "__main__":
