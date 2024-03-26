@@ -20,7 +20,7 @@ def states():
 
 
 @app.teardown_appcontext
-def close():
+def teardown_appcontext(exception):
     """close SQLAlchemy sesion"""
     storage.close()
 
