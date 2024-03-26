@@ -22,7 +22,8 @@ class FileStorage:
                 if type(v) == cls:
                     result[k] = v
             return result
-        return FileStorage.__objects
+        else:
+            return FileStorage.__objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
