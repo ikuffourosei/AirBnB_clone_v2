@@ -1,5 +1,11 @@
--- a script that prepares a MySQL server for the project
-CREATE USER IF NOT EXISTS 'hbnb_dev'@'localhost' IDENTIFIED WITH mysql_native_password BY 'hbnb_dev_pwd';
+-- Setting up a database as stated in task #3
+-- Database creation
 CREATE DATABASE IF NOT EXISTS hbnb_dev_db;
-GRANT ALL PRIVILEGES ON hbnb_dev_db.* TO 'hbnb_dev'@'localhost';
-GRANT SELECT ON performance_schema.* TO 'hbnb_dev'@'localhost';
+-- User creation
+CREATE USER IF NOT EXISTS "hbnb_dev"@"localhost" IDENTIFIED BY "hbnb_dev_pwd";
+-- privileges granting
+GRANT ALL PRIVILEGES ON hbnb_dev_db.* TO "hbnb_dev"@"localhost";
+FLUSH PRIVILEGES;
+-- privileges granting
+GRANT SELECT ON performance_schema.* TO "hbnb_dev"@"localhost";
+FLUSH PRIVILEGES;

@@ -1,56 +1,44 @@
 #!/usr/bin/python3
-"""a fabric script that distributes an archive to your web servers
-"""
-
-
+"""2. Deploy archive!"""
+from fabric.api import put, run, env
+from datetime import datetime
 import os
-from fabric.api import env, put, run
-from sys import argv
+import subprocess as sub
 
-
-env.hosts = ['18.210.19.150', '34.224.62.244']
+env.hosts = ["54.226.42.171", "54.236.16.117"]
+env.user = "ubuntu"
 
 
 def do_deploy(archive_path):
-    """Distributes an archive to a web server.
-    Args:
-        archive_path (str): The path of the archive to distribute.
-    Returns:
-        If the file doesn't exist at archive_path or an error occurs - False.
-        if successful - True.
-    """
-    if not os.path.isfile(archive_path) is True:
+    """Distributes an archive to the web servers"""
+    if not os.path.exists(archive_path):
         return False
+    try:
+        # getting name of archive from archive_path
+        temp = str(archive_path).split("/")[-1]
+        name = temp.split(".")[0]
 
-    # generating the remote file name and path
-    base_name = os.path.basename(archive_path)  # with .tgz
-    file_name = os.path.splitext(base_name)[0]  # without .tgz
-    remote_dir = "/tmp/{}".format(base_name)
+        # placing the archive
+        sub.run(["scp", "{}".format(archive_path),
+                 "{}@{}:/tmp/".format(env.user, env.host)], stdin="yes")
+        # put(archive_path, "/tmp/")
 
-    # upload archive to /tmp/ directory
-    if put(archive_path, "{}".format(remote_dir)).failed is True:
-        return False
+        # uncompressing...
+        # extraction path
+        extrPath = "/data/web_static/releases/{}/".format(name)
+        run("mkdir -p {}".format(extrPath))
+        run("tar -xzf /tmp/{} -C {}".format(temp, extrPath))
+        run("mv {}/web_static/* {}".format(extrPath, extrPath))
+        # removing extracted
+        run("rm /tmp/{}".format(temp))
 
-    # uncompress the archive
-    new_dir = '/data/web_static/releases/{}/'.format(file_name)
-    if run("rm -rf {}".format(new_dir)).failed is True:
-        return False
-    if run("mkdir -p {}".format(new_dir)).failed is True:
-        return False
-    if run("tar -xzf {} -C {}".format(remote_dir, new_dir)).failed is True:
-        return False
+        # deletes the symbolic
+        run("rm -rf /data/web_static/current")
 
-    # deleting archive from web server
-    if run("rm {}".format(remote_dir)).failed is True:
+        # new symbolic link
+        run("ln -s {} /data/web_static/current".format(extrPath))
+        print("New version deployed!")
+        return True
+    except Exception as nope:
+        print(nope)
         return False
-    if run("mv {}web_static/* {}".format(new_dir, new_dir)).failed is True:
-        return False
-    if run("rm -rf {}web_static".format(new_dir)).failed is True:
-        return False
-    if run("rm -rf /data/web_static/current").failed is True:
-        return False
-
-    # creating a new symbolic link
-    if run("ln -s {} /data/web_static/current".format(new_dir)).failed is True:
-        return False
-    return True
